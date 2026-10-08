@@ -276,6 +276,21 @@ function setupReveal() {
   targets.forEach((el) => { el.classList.add("reveal"); io.observe(el); });
 }
 
+/* ---------- Auto scroll ---------- */
+// If the guest hasn't scrolled 4 seconds after the site opens, glide down to the next section.
+function autoScrollIfIdle(delay = 4000) {
+  const events = ["scroll", "wheel", "touchstart", "keydown", "mousedown"];
+  const cancel = () => {
+    clearTimeout(timer);
+    events.forEach((e) => window.removeEventListener(e, cancel));
+  };
+  const timer = setTimeout(() => {
+    cancel();
+    if (window.scrollY < 10) $(".countdown").scrollIntoView({ behavior: "smooth" });
+  }, delay);
+  setTimeout(() => events.forEach((e) => window.addEventListener(e, cancel, { passive: true })), 0);
+}
+
 /* ---------- Envelope intro & music ---------- */
 function setupIntro() {
   const intro = $("#intro");
@@ -297,6 +312,7 @@ function setupIntro() {
     document.body.classList.remove("locked");
     setTimeout(() => intro.remove(), 800);
     toggle.hidden = false;
+    autoScrollIfIdle();
   };
 
   intro.addEventListener("click", () => {
@@ -315,6 +331,10 @@ function setupIntro() {
 }
 
 /* ---------- Init ---------- */
+// Always start from the top (behind the envelope), even after a reload.
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+window.scrollTo(0, 0);
+
 setupMap();
 setupRsvp();
 renderText();
