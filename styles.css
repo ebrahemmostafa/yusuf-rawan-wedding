@@ -426,6 +426,8 @@ textarea.field { resize: vertical; }
 .footer { background: var(--ivory); text-align: center; padding: 56px 20px 64px; }
 .footer .script { font-size: 2.4rem; }
 .footer .caps { margin-top: 8px; }
+.credit { margin-top: 36px; font-size: .7rem; letter-spacing: .06em; color: #b9a582; }
+.credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
 /* Reveal on scroll */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
