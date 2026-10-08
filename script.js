@@ -7,7 +7,7 @@ const CONFIG = {
   // Date & time of the ceremony, Cairo time (UTC+2)
   date: "2026-11-20T15:00:00+02:00",
   time: "15:00",
-  venueName: "Beau Jardin",
+  venueName: "Beau Jardin East",
   address1: "Ismailia Desert Road, El Shorouk",
   address2: "Cairo, Egypt",
   mapQuery: "5JPJ+G43 Beau Jardin East, Ismailia Desert Rd, El Shorouk, Cairo Governorate",
