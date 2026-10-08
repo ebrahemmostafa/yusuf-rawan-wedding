@@ -24,7 +24,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Great+Vibes&family=Pinyon+Script&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="locked">
+
+  <!-- Envelope intro: tap to open -->
+  <div class="intro" id="intro" role="button" aria-label="Open invitation">
+    <img src="assets/img/intro-poster.jpg" alt="" class="intro-poster" draggable="false">
+    <video id="intro-video" src="assets/video/intro.mp4" poster="assets/img/intro-poster.jpg" muted playsinline preload="auto"></video>
+    <p class="intro-hint">Tap to open</p>
+  </div>
+
+  <!-- Background music -->
+  <audio id="music" src="assets/audio/music.mp3" loop preload="auto"></audio>
+  <button type="button" class="music-toggle" id="music-toggle" aria-label="Music" hidden>
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+  </button>
 
   <!-- Hero -->
   <header class="hero" id="top">

@@ -64,7 +64,6 @@ const I18N = {
     "rsvp.person": "Person {n}",
     "rsvp.mainContact": "(Main contact)",
     "rsvp.fullName": "Full name",
-    "rsvp.email": "Email address",
     "rsvp.dietary": "Dietary requirements",
     "rsvp.dietaryPh": "e.g. vegetarian, allergies, etc.",
     "rsvp.children": "Will any children be attending?",
@@ -143,7 +142,6 @@ function saveGuestInputs() {
   $$("#guests .guest").forEach((g, i) => {
     guestData[i] = {
       name: $("[name=name]", g).value,
-      email: $("[name=email]", g)?.value ?? "",
       dietary: $("[name=dietary]", g).value,
     };
   });
@@ -158,7 +156,6 @@ function renderGuests() {
     html += `<div class="guest">
       <h4>${t("rsvp.person", { n: i + 1 })} ${i === 0 ? t("rsvp.mainContact") : ""}</h4>
       <input class="field" name="name" placeholder="${t("rsvp.fullName")}" value="${esc(d.name)}" autocomplete="${i === 0 ? "name" : "off"}">
-      ${i === 0 ? `<input class="field" type="email" name="email" placeholder="${t("rsvp.email")}" value="${esc(d.email)}" autocomplete="email">` : ""}
       <label>${t("rsvp.dietary")}</label>
       <input class="field" name="dietary" placeholder="${t("rsvp.dietaryPh")}" value="${esc(d.dietary)}">
     </div>`;
@@ -183,7 +180,7 @@ function buildSummary(data) {
   if (data.attending === "yes") {
     lines.push(`${t("msg.guests")}: ${data.guests.length}`);
     data.guests.forEach((g, i) => {
-      lines.push(`  ${i + 1}. ${g.name}${g.email ? ` <${g.email}>` : ""}${g.dietary ? ` – ${g.dietary}` : ""}`);
+      lines.push(`  ${i + 1}. ${g.name}${g.dietary ? ` – ${g.dietary}` : ""}`);
     });
     lines.push(`${t("msg.children")}: ${data.children === "yes" ? `${t("rsvp.childYes")} – ${data.childrenDetails}` : t("rsvp.childNo")}`);
   } else {
@@ -206,7 +203,7 @@ async function submitRsvp(e) {
   if (attending === "yes") {
     saveGuestInputs();
     data.guests = guestData.slice(0, guestCount).map((g) => ({
-      name: g.name.trim(), email: g.email.trim(), dietary: g.dietary.trim(),
+      name: g.name.trim(), dietary: g.dietary.trim(),
     }));
     data.children = form.children.value;
     data.childrenDetails = form.childrenDetails.value.trim();
@@ -279,6 +276,44 @@ function setupReveal() {
   targets.forEach((el) => { el.classList.add("reveal"); io.observe(el); });
 }
 
+/* ---------- Envelope intro & music ---------- */
+function setupIntro() {
+  const intro = $("#intro");
+  const video = $("#intro-video");
+  const music = $("#music");
+  const toggle = $("#music-toggle");
+  let state = "idle";
+
+  const setPlaying = (on) => toggle.classList.toggle("playing", on);
+  music.volume = 0.6;
+  music.addEventListener("play", () => setPlaying(true));
+  music.addEventListener("pause", () => setPlaying(false));
+  toggle.addEventListener("click", () => (music.paused ? music.play().catch(() => {}) : music.pause()));
+
+  const finish = () => {
+    if (state === "done") return;
+    state = "done";
+    intro.classList.add("fade");
+    document.body.classList.remove("locked");
+    setTimeout(() => intro.remove(), 800);
+    toggle.hidden = false;
+  };
+
+  intro.addEventListener("click", () => {
+    if (state !== "idle") return;
+    state = "playing";
+    music.play().catch(() => {});
+    const p = video.play();
+    if (p && p.catch) p.catch(finish);
+  });
+  video.addEventListener("timeupdate", () => {
+    if (video.currentTime > 0.05) intro.classList.add("started");
+    if (state === "playing" && video.duration - video.currentTime <= 0.8) finish();
+  });
+  video.addEventListener("ended", finish);
+  video.addEventListener("error", () => state === "playing" && finish());
+}
+
 /* ---------- Init ---------- */
 setupMap();
 setupRsvp();
@@ -286,3 +321,4 @@ renderText();
 tick();
 setInterval(tick, 30000);
 setupReveal();
+setupIntro();
