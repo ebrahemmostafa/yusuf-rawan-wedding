@@ -55,7 +55,7 @@ const I18N = {
     "dress.women": "Women",
     "dress.womenText": "Cocktail or formal dress",
     "dress.men": "Men",
-    "dress.menText": "Dark suit and tie",
+    "dress.menText": "Dark suit with Tie / Papion",
     "rsvp.subtitle": "Kindly let us know if you can join us",
     "rsvp.attending": "Will you be attending?",
     "rsvp.yes": "Yes, I'll be there",
