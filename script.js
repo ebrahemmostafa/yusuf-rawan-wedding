@@ -4,13 +4,14 @@
 const CONFIG = {
   name1: "Yusuf",
   name2: "Rawan",
-  // Local date & time of the ceremony (YYYY-MM-DDTHH:MM)
-  date: "2026-09-12T14:00",
+  // Date & time of the ceremony, Cairo time (UTC+2)
+  date: "2026-11-20T14:00:00+02:00",
   time: "14:00",
-  venueName: "Finca El Olivar",
-  address1: "Camino de los Olivos s/n, Ronda",
-  address2: "Málaga, 29400 – España",
-  mapQuery: "Finca El Olivar, Ronda, Málaga, Spain",
+  venueName: "Beau Jardin",
+  address1: "Ismailia Desert Road, El Shorouk",
+  address2: "Cairo, Egypt",
+  mapQuery: "5JPJ+G43 Beau Jardin East, Ismailia Desert Rd, El Shorouk, Cairo Governorate",
+  mapLink: "https://maps.app.goo.gl/r3tn38XmANG3feQ18",
   programme: [
     { time: "14:00", key: "arrival" },
     { time: "14:30", key: "ceremony" },
@@ -39,7 +40,7 @@ const I18N = {
     "countdown.hours": "Hours",
     "countdown.minutes": "Minutes",
     "welcome.title": "Welcome!",
-    "welcome.text": "We warmly invite you to celebrate our wedding day with us in the beautiful town of Ronda, Andalusia. We look forward to sharing this unforgettable moment with our most special people.",
+    "welcome.text": "We warmly invite you to celebrate our wedding day with us. We look forward to sharing this unforgettable moment with our most special people.",
     "venue.title": "The Venue",
     "venue.subtitle": "Where we celebrate",
     "venue.openMaps": "Open in Maps",
@@ -94,7 +95,7 @@ const I18N = {
     "countdown.hours": "Horas",
     "countdown.minutes": "Minutos",
     "welcome.title": "¡Bienvenidos!",
-    "welcome.text": "Os invitamos con mucho cariño a celebrar el día de nuestra boda con nosotros en el precioso pueblo de Ronda, Andalucía. Estamos deseando compartir este momento inolvidable con las personas más especiales.",
+    "welcome.text": "Os invitamos con mucho cariño a celebrar el día de nuestra boda con nosotros. Estamos deseando compartir este momento inolvidable con las personas más especiales.",
     "venue.title": "El Lugar",
     "venue.subtitle": "Dónde lo celebramos",
     "venue.openMaps": "Abrir en Maps",
@@ -177,7 +178,7 @@ function renderGallery() {
 function setupMap() {
   const q = encodeURIComponent(CONFIG.mapQuery);
   $("#map-frame").src = `https://www.google.com/maps?q=${q}&output=embed`;
-  $("#map-link").href = `https://www.google.com/maps/search/?api=1&query=${q}`;
+  $("#map-link").href = CONFIG.mapLink || `https://www.google.com/maps/search/?api=1&query=${q}`;
 }
 
 function applyLang(next) {

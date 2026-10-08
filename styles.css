@@ -173,6 +173,19 @@ section { padding: 72px 20px; text-align: center; }
   color: var(--gold-soft);
 }
 
+/* ---------- Quran verse ---------- */
+.verse { background: var(--ivory); padding: 64px 24px 0; }
+.verse-text {
+  font-family: "Amiri", serif;
+  font-size: clamp(1.45rem, 5.6vw, 1.9rem);
+  line-height: 2.1;
+  color: var(--brown-dark);
+  max-width: 620px;
+  margin: 0 auto;
+}
+.verse-ref { font-family: "Amiri", serif; color: var(--gold); font-size: 1.1rem; margin-top: 14px; }
+.verse + .welcome { padding-top: 56px; }
+
 /* ---------- Welcome ---------- */
 .welcome { background: var(--ivory); padding-bottom: 56px; }
 .welcome-text {
