@@ -50,33 +50,6 @@ section { padding: 72px 20px; text-align: center; }
   background: var(--paper) url("assets/img/paper.png") center / cover no-repeat;
 }
 
-/* ---------- Language toggle ---------- */
-.lang-toggle {
-  position: fixed;
-  top: 18px;
-  right: 18px;
-  z-index: 50;
-  display: flex;
-  gap: 4px;
-  padding: 5px;
-  border-radius: 999px;
-  background: rgba(255, 253, 249, .95);
-  box-shadow: 0 4px 16px rgba(60, 40, 10, .18);
-}
-.lang-toggle button {
-  font-family: var(--body);
-  font-size: 1rem;
-  border: 0;
-  background: transparent;
-  color: var(--brown);
-  width: 52px;
-  height: 40px;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background .25s, color .25s;
-}
-.lang-toggle button.active { background: var(--toggle); color: #fff; }
-
 /* ---------- Hero ---------- */
 .hero {
   position: relative;

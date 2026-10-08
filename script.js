@@ -86,67 +86,10 @@ const I18N = {
     "msg.children": "Children",
     "msg.message": "Message",
   },
-  es: {
-    "hero.kicker": "Nos casamos",
-    "hero.rsvp": "Confirmar",
-    "countdown.title": "Cuenta atrás",
-    "countdown.until": "Hasta el",
-    "countdown.days": "Días",
-    "countdown.hours": "Horas",
-    "countdown.minutes": "Minutos",
-    "welcome.title": "¡Bienvenidos!",
-    "welcome.text": "Os invitamos con mucho cariño a celebrar el día de nuestra boda con nosotros. Estamos deseando compartir este momento inolvidable con las personas más especiales.",
-    "venue.title": "El Lugar",
-    "venue.subtitle": "Dónde lo celebramos",
-    "venue.openMaps": "Abrir en Maps",
-    "programme.title": "Programa del día",
-    "programme.arrival": "Llegada",
-    "programme.ceremony": "Katb El Ketab",
-    "programme.cocktails": "Cóctel",
-    "programme.dinner": "Cena",
-    "programme.cake": "Corte de la tarta",
-    "programme.finish": "Fin",
-    "dress.title": "Código de vestimenta",
-    "dress.women": "Mujeres",
-    "dress.womenText": "Vestido de cóctel o de gala",
-    "dress.men": "Hombres",
-    "dress.menText": "Traje oscuro y corbata",
-    "rsvp.subtitle": "Por favor, confirmad vuestra asistencia",
-    "rsvp.attending": "¿Vas a asistir?",
-    "rsvp.yes": "Sí, allí estaré",
-    "rsvp.no": "Lamentablemente, no podré ir",
-    "rsvp.howMany": "¿Cuántos invitados?",
-    "rsvp.person": "Persona {n}",
-    "rsvp.mainContact": "(Contacto principal)",
-    "rsvp.fullName": "Nombre completo",
-    "rsvp.email": "Correo electrónico",
-    "rsvp.dietary": "Requisitos alimentarios",
-    "rsvp.dietaryPh": "p. ej. vegetariano, alergias, etc.",
-    "rsvp.children": "¿Asistirán niños?",
-    "rsvp.childYes": "Sí",
-    "rsvp.childNo": "No",
-    "rsvp.childrenPh": "Número y edades de los niños",
-    "rsvp.message": "Mensaje para los novios",
-    "rsvp.messagePh": "Escribe algo bonito (opcional)",
-    "rsvp.submit": "Enviar confirmación",
-    "rsvp.sending": "Enviando…",
-    "rsvp.errName": "Por favor, escribe el nombre de cada invitado.",
-    "rsvp.errSend": "Algo ha fallado. Inténtalo de nuevo.",
-    "rsvp.thanksTitle": "¡Gracias!",
-    "rsvp.thanksYes": "Estamos deseando celebrarlo contigo.",
-    "rsvp.thanksNo": "Te echaremos de menos. Gracias por avisarnos.",
-    "msg.title": "Confirmación – {couple}",
-    "msg.attending": "Asistencia",
-    "msg.guests": "Invitados",
-    "msg.children": "Niños",
-    "msg.message": "Mensaje",
-  },
 };
 
-const LOCALES = { en: "en-GB", es: "es-ES" };
-let lang = "en";
 const t = (key, vars = {}) =>
-  (I18N[lang][key] ?? I18N.en[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
+  (I18N.en[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -154,9 +97,8 @@ const weddingDate = new Date(CONFIG.date);
 
 /* ---------- Static content ---------- */
 function formatDate() {
-  return new Intl.DateTimeFormat(LOCALES[lang], { day: "numeric", month: "long", year: "numeric" })
-    .format(weddingDate)
-    .replace(/ de /g, " ");
+  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" })
+    .format(weddingDate);
 }
 
 function renderConfig() {
@@ -181,16 +123,12 @@ function setupMap() {
   $("#map-link").href = CONFIG.mapLink || `https://www.google.com/maps/search/?api=1&query=${q}`;
 }
 
-function applyLang(next) {
-  lang = next;
-  document.documentElement.lang = lang;
-  $$(".lang-toggle button").forEach((b) => b.classList.toggle("active", b.dataset.lang === lang));
+function renderText() {
   $$("[data-i18n]").forEach((el) => (el.textContent = t(el.dataset.i18n)));
   $$("[data-i18n-ph]").forEach((el) => (el.placeholder = t(el.dataset.i18nPh)));
   renderConfig();
   renderTimeline();
   renderGuests();
-  try { localStorage.setItem("lang", lang); } catch {}
 }
 
 /* ---------- Countdown ---------- */
@@ -268,7 +206,7 @@ async function submitRsvp(e) {
   $$(".field.invalid", form).forEach((f) => f.classList.remove("invalid"));
 
   const attending = form.attending.value;
-  const data = { attending, message: form.message.value.trim(), lang, submittedAt: new Date().toISOString() };
+  const data = { attending, message: form.message.value.trim(), submittedAt: new Date().toISOString() };
 
   if (attending === "yes") {
     saveGuestInputs();
@@ -350,10 +288,7 @@ function setupReveal() {
 renderGallery();
 setupMap();
 setupRsvp();
-$$(".lang-toggle button").forEach((b) => b.addEventListener("click", () => applyLang(b.dataset.lang)));
-let saved = "en";
-try { saved = localStorage.getItem("lang") || "en"; } catch {}
-applyLang(I18N[saved] ? saved : "en");
+renderText();
 tick();
 setInterval(tick, 30000);
 setupReveal();
