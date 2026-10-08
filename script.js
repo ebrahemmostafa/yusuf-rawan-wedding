@@ -112,11 +112,6 @@ function renderTimeline() {
     .join("");
 }
 
-function renderGallery() {
-  $("#gallery").innerHTML = Array.from({ length: 10 }, (_, i) =>
-    `<img src="assets/img/gallery-${i + 1}.jpg" alt="" loading="lazy">`).join("");
-}
-
 function setupMap() {
   const q = encodeURIComponent(CONFIG.mapQuery);
   $("#map-frame").src = `https://www.google.com/maps?q=${q}&output=embed`;
@@ -276,7 +271,7 @@ function setupRsvp() {
 
 /* ---------- Scroll reveal ---------- */
 function setupReveal() {
-  const targets = $$("section > *:not(.dress-bg):not(.gallery), .dress-bg .card");
+  const targets = $$("section > *:not(.dress-bg), .dress-bg .card");
   if (!("IntersectionObserver" in window)) return;
   const io = new IntersectionObserver((entries) => {
     entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
@@ -285,7 +280,6 @@ function setupReveal() {
 }
 
 /* ---------- Init ---------- */
-renderGallery();
 setupMap();
 setupRsvp();
 renderText();

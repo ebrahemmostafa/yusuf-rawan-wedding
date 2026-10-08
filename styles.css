@@ -160,7 +160,7 @@ section { padding: 72px 20px; text-align: center; }
 .verse + .welcome { padding-top: 56px; }
 
 /* ---------- Welcome ---------- */
-.welcome { background: var(--ivory); padding-bottom: 56px; }
+.welcome { background: var(--ivory); }
 .welcome-text {
   max-width: 560px;
   margin: 28px auto 0;
@@ -168,27 +168,6 @@ section { padding: 72px 20px; text-align: center; }
   font-size: 1.3rem;
   line-height: 1.6;
   color: var(--brown);
-}
-.gallery {
-  display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  margin: 44px -20px 0;
-  padding: 0 20px 8px;
-  scrollbar-width: none;
-}
-.gallery::-webkit-scrollbar { display: none; }
-.gallery img {
-  flex: 0 0 auto;
-  width: min(58vw, 300px);
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  border-radius: 6px;
-  scroll-snap-align: center;
-}
-@media (min-width: 900px) {
-  .gallery { justify-content: safe center; }
 }
 
 /* ---------- Cards ---------- */
