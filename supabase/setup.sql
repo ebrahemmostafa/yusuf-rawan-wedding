@@ -52,8 +52,8 @@ security definer
 set search_path = public
 as $$
 begin
-  if char_length(coalesce(p_passcode, '')) < 16 then
-    raise exception 'Passcode must be at least 16 characters';
+  if char_length(coalesce(p_passcode, '')) < 6 then
+    raise exception 'Passcode must be at least 6 characters';
   end if;
   insert into public."yusufRawanWedding_settings" (id, passcode_hash)
   values (true, encode(sha256(convert_to(p_passcode, 'UTF8')), 'hex'))
@@ -130,8 +130,8 @@ grant execute on function public.yusuf_rawan_wedding_responses(text) to anon, au
 
 -- =========================================================
 -- SET THE PASSCODE – run this separately in the SQL Editor
--- (don't save it in this file). Use 16+ random characters,
--- e.g. from a password generator. Run it again to change it.
+-- (don't save it in this file). At least 6 characters; longer
+-- and less guessable is safer. Run it again to change it.
 --
 --   select public.yusuf_rawan_wedding_set_passcode('your-long-random-passcode');
 -- =========================================================
