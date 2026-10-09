@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>RSVP Responses</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #c5a46d;
+      --gold-soft: #d8c39b;
+      --brown: #7a5a32;
+      --brown-dark: #5e4322;
+      --accent: #8a5f2e;
+      --muted: #a08560;
+      --ivory: #faf7f1;
+      --white: #fffdf9;
+      --line: #e7dcc6;
+      --no: #b0452f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Alegreya", Georgia, serif;
+      background: var(--ivory);
+      color: var(--brown);
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 40px 16px 64px; }
+    h1 {
+      font-family: "Pinyon Script", cursive;
+      font-weight: 400;
+      font-size: clamp(2.4rem, 8vw, 3.2rem);
+      text-align: center;
+      margin: 0;
+    }
+    .sub { text-align: center; color: var(--muted); margin: 4px 0 32px; letter-spacing: .14em; text-transform: uppercase; font-size: .85rem; }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+    }
+    /* Login */
+    #login { max-width: 380px; margin: 0 auto; text-align: center; }
+    #login p { margin: 0 0 14px; }
+    input[type=password], input[type=search] {
+      width: 100%;
+      font: inherit;
+      font-size: 1.05rem;
+      color: var(--brown-dark);
+      background: #faf6ee;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px 14px;
+      outline: none;
+    }
+    input:focus { border-color: var(--gold); background: #fff; }
+    button {
+      font: inherit;
+      border: 0;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      padding: 11px 22px;
+      cursor: pointer;
+      letter-spacing: .08em;
+    }
+    button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--gold-soft); }
+    button:disabled { opacity: .6; cursor: default; }
+    #login button { width: 100%; margin-top: 12px; }
+    .error { color: var(--no); margin-top: 12px; }
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+    .stat { text-align: center; padding: 16px 10px; }
+    .stat b { display: block; font-size: 2rem; color: var(--brown-dark); font-variant-numeric: tabular-nums; }
+    .stat span { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+    /* Toolbar */
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 18px; }
+    .toolbar input { flex: 1 1 220px; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tabs button { background: transparent; color: var(--brown); border: 1px solid var(--line); padding: 8px 16px; }
+    .tabs button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    h2 { font-family: "Pinyon Script", cursive; font-weight: 400; font-size: 2.2rem; margin: 36px 0 14px; }
+    /* Messages */
+    .messages { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+    .msg blockquote { margin: 0; font-style: italic; font-size: 1.15rem; line-height: 1.55; color: var(--brown-dark); white-space: pre-wrap; overflow-wrap: anywhere; }
+    .msg footer { margin-top: 12px; color: var(--muted); font-size: .95rem; }
+    /* Responses */
+    .list { display: grid; gap: 12px; }
+    .resp header { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+    .resp h3 { margin: 0; font-size: 1.25rem; color: var(--brown-dark); font-weight: 500; overflow-wrap: anywhere; }
+    .badge { font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+    .badge.yes { background: #efe4cf; color: var(--accent); }
+    .badge.no { background: #f6e1db; color: var(--no); }
+    .meta { color: var(--muted); font-size: .9rem; margin-top: 2px; }
+    .resp ul { margin: 12px 0 0; padding-left: 20px; }
+    .resp li { margin: 3px 0; overflow-wrap: anywhere; }
+    .resp .diet { color: var(--muted); font-style: italic; }
+    .resp .extra { margin-top: 10px; overflow-wrap: anywhere; }
+    .resp .extra b { font-weight: 500; }
+    .empty { text-align: center; color: var(--muted); padding: 30px 0; font-style: italic; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>RSVP Responses</h1>
+    <p class="sub">Yusuf &amp; Rawan · 20 November 2026</p>
+
+    <form id="login" class="card">
+      <p>Enter the passcode to view responses.</p>
+      <input type="password" id="passcode" autocomplete="current-password" placeholder="Passcode" required>
+      <button type="submit" id="login-btn">View responses</button>
+      <p class="error" id="login-error" hidden></p>
+    </form>
+
+    <main id="dashboard" hidden>
+      <section class="stats">
+        <div class="card stat"><b id="s-guests">0</b><span>Guests coming</span></div>
+        <div class="card stat"><b id="s-yes">0</b><span>Accepted</span></div>
+        <div class="card stat"><b id="s-no">0</b><span>Declined</span></div>
+        <div class="card stat"><b id="s-msgs">0</b><span>Messages</span></div>
+      </section>
+
+      <div class="toolbar">
+        <input type="search" id="search" placeholder="Search names or messages…">
+        <button type="button" class="ghost" id="refresh">Refresh</button>
+        <button type="button" class="ghost" id="csv">Download CSV</button>
+      </div>
+
+      <h2>Messages</h2>
+      <div class="messages" id="messages"></div>
+
+      <h2>All responses</h2>
+      <div class="tabs" id="tabs">
+        <button type="button" data-filter="all" class="active">All</button>
+        <button type="button" data-filter="yes">Accepted</button>
+        <button type="button" data-filter="no">Declined</button>
+      </div>
+      <div class="list" id="list" style="margin-top:14px"></div>
+    </main>
+  </div>
+
+  <script src="supabase-config.js"></script>
+  <script>
+    const $ = (s) => document.querySelector(s);
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const fmt = (d) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(d));
+
+    let rows = [];
+    let filter = "all";
+    let passcode = "";
+
+    async function load() {
+      rows = (await supabaseRequest("rpc/yusuf_rawan_wedding_responses", { p_passcode: passcode })) || [];
+      render();
+    }
+
+    function matches(r, q) {
+      if (!q) return true;
+      const hay = [r.name, r.message, r.children_details, ...(r.guests || []).map((g) => `${g.name} ${g.dietary}`)]
+        .join(" ").toLowerCase();
+      return hay.includes(q);
+    }
+
+    function render() {
+      const yes = rows.filter((r) => r.attending);
+      $("#s-guests").textContent = yes.reduce((n, r) => n + (r.guest_count || 0), 0);
+      $("#s-yes").textContent = yes.length;
+      $("#s-no").textContent = rows.length - yes.length;
+      $("#s-msgs").textContent = rows.filter((r) => r.message).length;
+
+      const q = $("#search").value.trim().toLowerCase();
+      const visible = rows.filter((r) => matches(r, q));
+
+      const msgs = visible.filter((r) => r.message);
+      $("#messages").innerHTML = msgs.length
+        ? msgs.map((r) => `<article class="card msg"><blockquote>“${esc(r.message)}”</blockquote><footer>— ${esc(r.name)} · ${fmt(r.created_at)}</footer></article>`).join("")
+        : `<p class="empty">No messages yet.</p>`;
+
+      const list = visible.filter((r) => filter === "all" || (filter === "yes") === r.attending);
+      $("#list").innerHTML = list.length
+        ? list.map((r) => `
+          <article class="card resp">
+            <header>
+              <h3>${esc(r.name)}</h3>
+              <span class="badge ${r.attending ? "yes" : "no"}">${r.attending ? `Coming · ${r.guest_count}` : "Not coming"}</span>
+            </header>
+            <div class="meta">${fmt(r.created_at)}</div>
+            ${r.attending && r.guests?.length ? `<ul>${r.guests.map((g) => `<li>${esc(g.name)}${g.dietary ? ` <span class="diet">– ${esc(g.dietary)}</span>` : ""}</li>`).join("")}</ul>` : ""}
+            ${r.attending ? `<div class="extra"><b>Children:</b> ${r.children ? `Yes${r.children_details ? ` – ${esc(r.children_details)}` : ""}` : "No"}</div>` : ""}
+            ${r.message ? `<div class="extra"><b>Message:</b> ${esc(r.message)}</div>` : ""}
+          </article>`).join("")
+        : `<p class="empty">No responses yet.</p>`;
+    }
+
+    function downloadCsv() {
+      const cell = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+      const header = ["Submitted", "Attending", "Name", "Guest count", "Guests", "Dietary", "Children", "Children details", "Message"];
+      const lines = rows.map((r) => [
+        r.created_at, r.attending ? "Yes" : "No", r.name, r.guest_count,
+        (r.guests || []).map((g) => g.name).join("; "),
+        (r.guests || []).filter((g) => g.dietary).map((g) => `${g.name}: ${g.dietary}`).join("; "),
+        r.children ? "Yes" : "No", r.children_details, r.message,
+      ].map(cell).join(","));
+      const blob = new Blob(["﻿" + [header.map(cell).join(","), ...lines].join("\r\n")], { type: "text/csv;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "wedding-rsvps.csv";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    async function login(code) {
+      passcode = code;
+      const err = $("#login-error");
+      const btn = $("#login-btn");
+      err.hidden = true;
+      btn.disabled = true;
+      try {
+        if (!SUPABASE.url || !SUPABASE.key) throw new Error("Supabase is not configured yet (supabase-config.js).");
+        await load();
+        try { sessionStorage.setItem("rsvp-passcode", code); } catch {}
+        $("#login").hidden = true;
+        $("#dashboard").hidden = false;
+      } catch (e) {
+        try { sessionStorage.removeItem("rsvp-passcode"); } catch {}
+        err.textContent = /passcode/i.test(e.message) ? "Wrong passcode." : `Couldn't load responses: ${e.message}`;
+        err.hidden = false;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    $("#login").addEventListener("submit", (e) => { e.preventDefault(); login($("#passcode").value); });
+    $("#search").addEventListener("input", render);
+    $("#csv").addEventListener("click", downloadCsv);
+    $("#refresh").addEventListener("click", async (e) => {
+      e.target.disabled = true;
+      try { await load(); } catch (err) { alert(err.message); }
+      e.target.disabled = false;
+    });
+    $("#tabs").addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (!b) return;
+      filter = b.dataset.filter;
+      document.querySelectorAll("#tabs button").forEach((x) => x.classList.toggle("active", x === b));
+      render();
+    });
+
+    let saved = "";
+    try { saved = sessionStorage.getItem("rsvp-passcode") || ""; } catch {}
+    if (saved) login(saved);
+  </script>
+</body>
+</html>

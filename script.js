@@ -23,6 +23,7 @@ const CONFIG = {
   ],
   maxGuests: 6,
   // RSVP delivery. The first one that is set is used:
+  //  0. Supabase     – fill in supabase-config.js (see supabase/setup.sql)
   //  1. rsvpEndpoint – URL that accepts a JSON POST (e.g. https://formspree.io/f/xxxx)
   //  2. rsvpWhatsApp – phone number in international format, digits only (e.g. "201001234567")
   //  3. rsvpEmail    – opens the guest's mail app with the answers filled in
@@ -230,7 +231,20 @@ async function submitRsvp(e) {
   const btn = $(".submit", form);
   const summary = buildSummary(data);
   try {
-    if (CONFIG.rsvpEndpoint) {
+    if (SUPABASE.url && SUPABASE.key) {
+      btn.disabled = true;
+      btn.textContent = t("rsvp.sending");
+      const yes = attending === "yes";
+      await supabaseRequest("yusufRawanWedding", {
+        attending: yes,
+        name: yes ? data.guests[0].name : data.name,
+        guest_count: yes ? data.guests.length : 0,
+        guests: yes ? data.guests : [],
+        children: yes && data.children === "yes",
+        children_details: yes && data.children === "yes" ? data.childrenDetails || null : null,
+        message: data.message || null,
+      });
+    } else if (CONFIG.rsvpEndpoint) {
       btn.disabled = true;
       btn.textContent = t("rsvp.sending");
       const res = await fetch(CONFIG.rsvpEndpoint, {
