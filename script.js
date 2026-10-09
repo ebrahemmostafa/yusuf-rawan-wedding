@@ -102,14 +102,20 @@ function formatDate() {
     .format(weddingDate);
 }
 
+// "16:00" -> "4:00 PM"
+function to12h(hhmm) {
+  const [h, m] = hhmm.split(":").map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
+}
+
 function renderConfig() {
-  const values = { ...CONFIG, dateLong: formatDate() };
+  const values = { ...CONFIG, time: to12h(CONFIG.time), dateLong: formatDate() };
   $$("[data-cfg]").forEach((el) => (el.textContent = values[el.dataset.cfg]));
 }
 
 function renderTimeline() {
   $("#timeline").innerHTML = CONFIG.programme
-    .map((p) => `<li><div class="time">${p.time}</div><div class="what">${t("programme." + p.key)}</div></li>`)
+    .map((p) => `<li><div class="time">${to12h(p.time)}</div><div class="what">${t("programme." + p.key)}</div></li>`)
     .join("");
 }
 
