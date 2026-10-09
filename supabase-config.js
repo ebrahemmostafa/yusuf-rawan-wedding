@@ -5,8 +5,8 @@
      key – the public "anon" / "publishable" key (NEVER the service_role / secret key)
    ========================================================= */
 const SUPABASE = {
-  url: "",
-  key: "",
+  url: "https://jcuqwcwkowtjxcykstlf.supabase.co",
+  key: "sb_publishable_BFtrH3u_sv9zat6B9SALyw_nS7Pajaa",
 };
 
 async function supabaseRequest(path, body) {
