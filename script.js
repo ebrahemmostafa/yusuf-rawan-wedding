@@ -54,7 +54,7 @@ const I18N = {
     "programme.finish": "Finish",
     "dress.title": "Dress Code",
     "dress.women": "Women",
-    "dress.womenText": "Cocktail or formal dress",
+    "dress.womenText": "Wear whatever makes you feel beautiful",
     "dress.men": "Men",
     "dress.menText": "Dark suit with Tie / Papion",
     "rsvp.subtitle": "Kindly let us know if you can join us",
