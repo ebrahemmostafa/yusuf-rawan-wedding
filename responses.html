@@ -201,7 +201,11 @@
     }
 
     function downloadCsv() {
-      const cell = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+      const cell = (v) => {
+        let t = String(v ?? "");
+        if (/^[=+\-@\t\r]/.test(t)) t = "'" + t; // stop Excel treating guest text as a formula
+        return `"${t.replace(/"/g, '""')}"`;
+      };
       const header = ["Submitted", "Attending", "Name", "Guest count", "Guests", "Dietary", "Children", "Children details", "Message"];
       const lines = rows.map((r) => [
         r.created_at, r.attending ? "Yes" : "No", r.name, r.guest_count,

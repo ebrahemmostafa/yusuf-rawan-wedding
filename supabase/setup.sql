@@ -5,6 +5,8 @@
 --
 -- BEFORE RUNNING: replace CHANGE-ME-PASSCODE (near the bottom)
 -- with the passcode you'll type on the responses page.
+-- Use a long one (12+ characters, not a name or date) – it is the
+-- only thing protecting the guest list.
 -- =========================================================
 
 create table if not exists public."yusufRawanWedding" (
@@ -13,7 +15,10 @@ create table if not exists public."yusufRawanWedding" (
   attending        boolean     not null,
   name             text        not null check (char_length(name) between 1 and 120),
   guest_count      smallint    not null default 0 check (guest_count between 0 and 10),
-  guests           jsonb       not null default '[]'::jsonb,   -- [{ "name": "...", "dietary": "..." }]
+  guests           jsonb       not null default '[]'::jsonb    -- [{ "name": "...", "dietary": "..." }]
+                   check (jsonb_typeof(guests) = 'array'
+                          and jsonb_array_length(guests) <= 10
+                          and pg_column_size(guests) <= 4000),
   children         boolean     not null default false,
   children_details text        check (char_length(children_details) <= 300),
   message          text        check (char_length(message) <= 2000)
@@ -42,6 +47,7 @@ set search_path = public
 as $$
 begin
   if p_passcode is distinct from 'CHANGE-ME-PASSCODE' then
+    perform pg_sleep(1);  -- slow down passcode guessing
     raise exception 'invalid passcode' using errcode = '28P01';
   end if;
   return query select * from public."yusufRawanWedding" order by created_at desc;
