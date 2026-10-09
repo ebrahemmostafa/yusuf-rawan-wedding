@@ -1,6 +1,7 @@
 -- =========================================================
 -- Wedding RSVP – run once in Supabase → SQL Editor.
--- Only creates the table "yusufRawanWedding" and the function
+-- Only creates the tables "yusufRawanWedding" and
+-- "yusufRawanWedding_failedLogins" and the function
 -- yusuf_rawan_wedding_responses; nothing else in the project is touched.
 --
 -- BEFORE RUNNING: replace CHANGE-ME-PASSCODE (near the bottom)
@@ -38,19 +39,49 @@ revoke all on public."yusufRawanWedding" from anon, authenticated;
 grant insert (attending, name, guest_count, guests, children, children_details, message)
   on public."yusufRawanWedding" to anon, authenticated;
 
+-- Failed passcode attempts, used to lock the responses page after too many guesses.
+create table if not exists public."yusufRawanWedding_failedLogins" (
+  attempted_at timestamptz not null default now()
+);
+alter table public."yusufRawanWedding_failedLogins" enable row level security;
+revoke all on public."yusufRawanWedding_failedLogins" from anon, authenticated;
+
 -- Reading responses goes through this function, which checks the passcode.
-create or replace function public.yusuf_rawan_wedding_responses(p_passcode text)
-returns setof public."yusufRawanWedding"
+-- After 20 wrong passcodes within 15 minutes, every attempt is refused until the window passes.
+-- Returns {"ok": true, "rows": [...]} or {"ok": false, "error": "..."}.
+drop function if exists public.yusuf_rawan_wedding_responses(text);
+create function public.yusuf_rawan_wedding_responses(p_passcode text)
+returns jsonb
 language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  recent_failures int;
 begin
-  if p_passcode is distinct from 'CHANGE-ME-PASSCODE' then
-    perform pg_sleep(1);  -- slow down passcode guessing
-    raise exception 'invalid passcode' using errcode = '28P01';
+  delete from public."yusufRawanWedding_failedLogins"
+   where attempted_at < now() - interval '1 day';
+
+  select count(*) into recent_failures
+    from public."yusufRawanWedding_failedLogins"
+   where attempted_at > now() - interval '15 minutes';
+
+  if recent_failures >= 20 then
+    return jsonb_build_object('ok', false, 'error', 'locked');
   end if;
-  return query select * from public."yusufRawanWedding" order by created_at desc;
+
+  if p_passcode is distinct from 'CHANGE-ME-PASSCODE' then
+    insert into public."yusufRawanWedding_failedLogins" default values;
+    return jsonb_build_object('ok', false, 'error', 'invalid passcode');
+  end if;
+
+  return jsonb_build_object(
+    'ok', true,
+    'rows', coalesce((
+      select jsonb_agg(to_jsonb(r) order by r.created_at desc)
+        from public."yusufRawanWedding" r
+    ), '[]'::jsonb)
+  );
 end;
 $$;
 

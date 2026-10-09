@@ -158,7 +158,9 @@
     let passcode = "";
 
     async function load() {
-      rows = (await supabaseRequest("rpc/yusuf_rawan_wedding_responses", { p_passcode: passcode })) || [];
+      const res = await supabaseRequest("rpc/yusuf_rawan_wedding_responses", { p_passcode: passcode });
+      if (!res || !res.ok) throw new Error(res?.error || "unknown error");
+      rows = res.rows || [];
       render();
     }
 
@@ -235,7 +237,9 @@
         $("#dashboard").hidden = false;
       } catch (e) {
         try { sessionStorage.removeItem("rsvp-passcode"); } catch {}
-        err.textContent = /passcode/i.test(e.message) ? "Wrong passcode." : `Couldn't load responses: ${e.message}`;
+        err.textContent = /passcode/i.test(e.message) ? "Wrong passcode."
+          : e.message === "locked" ? "Too many wrong attempts. Try again in 15 minutes."
+          : `Couldn't load responses: ${e.message}`;
         err.hidden = false;
       } finally {
         btn.disabled = false;
