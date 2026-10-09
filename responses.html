@@ -238,7 +238,7 @@
       } catch (e) {
         try { sessionStorage.removeItem("rsvp-passcode"); } catch {}
         err.textContent = /passcode/i.test(e.message) ? "Wrong passcode."
-          : e.message === "locked" ? "Too many wrong attempts. Try again in 15 minutes."
+          : e.message === "locked" ? "Too many wrong attempts from this network. Try again in 15 minutes."
           : `Couldn't load responses: ${e.message}`;
         err.hidden = false;
       } finally {

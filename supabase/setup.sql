@@ -41,13 +41,17 @@ grant insert (attending, name, guest_count, guests, children, children_details, 
 
 -- Failed passcode attempts, used to lock the responses page after too many guesses.
 create table if not exists public."yusufRawanWedding_failedLogins" (
-  attempted_at timestamptz not null default now()
+  attempted_at timestamptz not null default now(),
+  client_ip    text        not null default 'unknown'
 );
+alter table public."yusufRawanWedding_failedLogins"
+  add column if not exists client_ip text not null default 'unknown';
 alter table public."yusufRawanWedding_failedLogins" enable row level security;
 revoke all on public."yusufRawanWedding_failedLogins" from anon, authenticated;
 
 -- Reading responses goes through this function, which checks the passcode.
--- After 20 wrong passcodes within 15 minutes, every attempt is refused until the window passes.
+-- After 10 wrong passcodes within 15 minutes from the same IP address, that address is
+-- refused until the window passes (other visitors, e.g. the couple, are not affected).
 -- Returns {"ok": true, "rows": [...]} or {"ok": false, "error": "..."}.
 drop function if exists public.yusuf_rawan_wedding_responses(text);
 create function public.yusuf_rawan_wedding_responses(p_passcode text)
@@ -58,20 +62,27 @@ set search_path = public
 as $$
 declare
   recent_failures int;
+  -- cf-connecting-ip is set by Supabase's edge and can't be forged by the caller;
+  -- x-forwarded-for is only a fallback.
+  ip text := coalesce(
+    nullif(current_setting('request.headers', true)::json->>'cf-connecting-ip', ''),
+    nullif(trim(split_part(current_setting('request.headers', true)::json->>'x-forwarded-for', ',', 1)), ''),
+    'unknown');
 begin
   delete from public."yusufRawanWedding_failedLogins"
    where attempted_at < now() - interval '1 day';
 
   select count(*) into recent_failures
     from public."yusufRawanWedding_failedLogins"
-   where attempted_at > now() - interval '15 minutes';
+   where client_ip = ip
+     and attempted_at > now() - interval '15 minutes';
 
-  if recent_failures >= 20 then
+  if recent_failures >= 10 then
     return jsonb_build_object('ok', false, 'error', 'locked');
   end if;
 
   if p_passcode is distinct from 'CHANGE-ME-PASSCODE' then
-    insert into public."yusufRawanWedding_failedLogins" default values;
+    insert into public."yusufRawanWedding_failedLogins" (client_ip) values (left(ip, 64));
     return jsonb_build_object('ok', false, 'error', 'invalid passcode');
   end if;
 
