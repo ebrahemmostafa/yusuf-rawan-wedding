@@ -1,13 +1,11 @@
 -- =========================================================
 -- Wedding RSVP – run once in Supabase → SQL Editor.
--- Only creates the tables "yusufRawanWedding" and
--- "yusufRawanWedding_failedLogins" and the function
--- yusuf_rawan_wedding_responses; nothing else in the project is touched.
+-- Only creates objects whose names start with "yusufRawanWedding" /
+-- "yusuf_rawan_wedding"; nothing else in the project is touched.
 --
--- BEFORE RUNNING: replace CHANGE-ME-PASSCODE (near the bottom)
--- with the passcode you'll type on the responses page.
--- Use a long one (12+ characters, not a name or date) – it is the
--- only thing protecting the guest list.
+-- The passcode for responses.html is NOT in this file (this file is in
+-- the public repo). After running it, set the passcode separately in the
+-- SQL Editor – see "SET THE PASSCODE" at the bottom.
 -- =========================================================
 
 create table if not exists public."yusufRawanWedding" (
@@ -39,6 +37,32 @@ revoke all on public."yusufRawanWedding" from anon, authenticated;
 grant insert (attending, name, guest_count, guests, children, children_details, message)
   on public."yusufRawanWedding" to anon, authenticated;
 
+-- The responses-page passcode, stored only as a SHA-256 hash.
+create table if not exists public."yusufRawanWedding_settings" (
+  id            boolean primary key default true check (id),   -- single row
+  passcode_hash text not null
+);
+alter table public."yusufRawanWedding_settings" enable row level security;
+revoke all on public."yusufRawanWedding_settings" from anon, authenticated;
+
+create or replace function public.yusuf_rawan_wedding_set_passcode(p_passcode text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if char_length(coalesce(p_passcode, '')) < 16 then
+    raise exception 'Passcode must be at least 16 characters';
+  end if;
+  insert into public."yusufRawanWedding_settings" (id, passcode_hash)
+  values (true, encode(sha256(convert_to(p_passcode, 'UTF8')), 'hex'))
+  on conflict (id) do update set passcode_hash = excluded.passcode_hash;
+end;
+$$;
+-- Only the project owner (SQL Editor) may set the passcode.
+revoke all on function public.yusuf_rawan_wedding_set_passcode(text) from public, anon, authenticated;
+
 -- Failed passcode attempts, used to lock the responses page after too many guesses.
 create table if not exists public."yusufRawanWedding_failedLogins" (
   attempted_at timestamptz not null default now(),
@@ -62,11 +86,11 @@ set search_path = public
 as $$
 declare
   recent_failures int;
-  -- cf-connecting-ip is set by Supabase's edge and can't be forged by the caller;
-  -- x-forwarded-for is only a fallback.
+  stored_hash text;
+  -- cf-connecting-ip is set by Supabase's edge and can't be forged by the caller.
+  -- (x-forwarded-for is deliberately not used: callers can put anything in it.)
   ip text := coalesce(
     nullif(current_setting('request.headers', true)::json->>'cf-connecting-ip', ''),
-    nullif(trim(split_part(current_setting('request.headers', true)::json->>'x-forwarded-for', ',', 1)), ''),
     'unknown');
 begin
   delete from public."yusufRawanWedding_failedLogins"
@@ -81,7 +105,12 @@ begin
     return jsonb_build_object('ok', false, 'error', 'locked');
   end if;
 
-  if p_passcode is distinct from 'CHANGE-ME-PASSCODE' then
+  select passcode_hash into stored_hash from public."yusufRawanWedding_settings";
+  if stored_hash is null then
+    return jsonb_build_object('ok', false, 'error', 'passcode not set');
+  end if;
+
+  if encode(sha256(convert_to(coalesce(p_passcode, ''), 'UTF8')), 'hex') <> stored_hash then
     insert into public."yusufRawanWedding_failedLogins" (client_ip) values (left(ip, 64));
     return jsonb_build_object('ok', false, 'error', 'invalid passcode');
   end if;
@@ -98,3 +127,11 @@ $$;
 
 revoke all on function public.yusuf_rawan_wedding_responses(text) from public;
 grant execute on function public.yusuf_rawan_wedding_responses(text) to anon, authenticated;
+
+-- =========================================================
+-- SET THE PASSCODE – run this separately in the SQL Editor
+-- (don't save it in this file). Use 16+ random characters,
+-- e.g. from a password generator. Run it again to change it.
+--
+--   select public.yusuf_rawan_wedding_set_passcode('your-long-random-passcode');
+-- =========================================================

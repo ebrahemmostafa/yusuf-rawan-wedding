@@ -237,7 +237,8 @@
         $("#dashboard").hidden = false;
       } catch (e) {
         try { sessionStorage.removeItem("rsvp-passcode"); } catch {}
-        err.textContent = /passcode/i.test(e.message) ? "Wrong passcode."
+        err.textContent = e.message === "passcode not set" ? "No passcode has been set yet (see supabase/setup.sql)."
+          : e.message === "invalid passcode" ? "Wrong passcode."
           : e.message === "locked" ? "Too many wrong attempts from this network. Try again in 15 minutes."
           : `Couldn't load responses: ${e.message}`;
         err.hidden = false;
