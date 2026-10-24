@@ -37,9 +37,6 @@
 
   <!-- Background music -->
   <audio id="music" src="assets/audio/music.mp3" loop preload="auto"></audio>
-  <button type="button" class="music-toggle" id="music-toggle" aria-label="Music" hidden>
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
-  </button>
 
   <!-- Hero -->
   <header class="hero" id="top">
@@ -55,6 +52,19 @@
       <div class="hero-bottom">
         <div class="divider-star"><span></span><i>✦</i><span></span></div>
         <p class="hero-date" data-cfg="dateLong"></p>
+        <div class="song">
+          <div class="song-player">
+            <svg class="heart" viewBox="0 0 24 22" aria-hidden="true"><path d="M12 21.5S1 14.6 1 7.4C1 3.8 3.7 1 7 1c2.1 0 3.9 1.1 5 2.8C13.1 2.1 14.9 1 17 1c3.3 0 6 2.8 6 6.4 0 7.2-11 14.1-11 14.1z"/></svg>
+            <span class="song-line"></span>
+            <button type="button" class="song-btn" id="music-toggle" aria-label="Play our song" aria-pressed="false">
+              <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+              <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+            </button>
+            <span class="song-line"></span>
+            <svg class="heart" viewBox="0 0 24 22" aria-hidden="true"><path d="M12 21.5S1 14.6 1 7.4C1 3.8 3.7 1 7 1c2.1 0 3.9 1.1 5 2.8C13.1 2.1 14.9 1 17 1c3.3 0 6 2.8 6 6.4 0 7.2-11 14.1-11 14.1z"/></svg>
+          </div>
+          <p class="script song-title">Listen to our song</p>
+        </div>
         <a href="#rsvp" class="hero-rsvp">
           <span data-i18n="hero.rsvp">RSVP</span>
           <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -62,6 +72,52 @@
       </div>
     </div>
   </header>
+
+  <!-- Invitation details -->
+  <section class="invite paper">
+    <div class="invite-card">
+      <div class="invite-photo">
+        <img src="assets/img/couple.jpg" alt="" loading="lazy">
+        <span class="invite-flaps"></span>
+      </div>
+      <h2 class="invite-names">
+        <span data-cfg="name1"></span>
+        <span class="amp">&amp;</span>
+        <span data-cfg="name2"></span>
+      </h2>
+      <svg class="flourish" viewBox="0 0 220 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path id="fl-half" d="M98 14c-8 0-12-7-20-7s-10 8-3 9 6-6 1-6M98 14H58c-6 0-9-4-15-4-7 0-11 5-18 5-5 0-8-3-8-6s3-4 5-3M60 14c-4 3-9 6-15 6-5 0-8-2-8-5M30 15c-6 0-10 3-16 3"/><use href="#fl-half" transform="matrix(-1 0 0 1 220 0)"/><path d="M110 7l4 7-4 7-4-7z"/><circle cx="110" cy="14" r="1.4" fill="currentColor"/></g></svg>
+      <p class="invite-date"><span data-cfg="dateShort"></span></p>
+      <p class="invite-time">At <span data-cfg="timeShort"></span></p>
+      <p class="invite-venue" data-cfg="venueName"></p>
+      <p class="invite-address"><span data-cfg="address1"></span><br><span data-cfg="address2"></span></p>
+      <svg class="flourish" viewBox="0 0 220 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M98 14c-8 0-12-7-20-7s-10 8-3 9 6-6 1-6M98 14H58c-6 0-9-4-15-4-7 0-11 5-18 5-5 0-8-3-8-6s3-4 5-3M60 14c-4 3-9 6-15 6-5 0-8-2-8-5M30 15c-6 0-10 3-16 3"/><use href="#fl-half" transform="matrix(-1 0 0 1 220 0)"/><path d="M110 7l4 7-4 7-4-7z"/><circle cx="110" cy="14" r="1.4" fill="currentColor"/></g></svg>
+      <p class="invite-note">We can't wait to celebrate our special day with you!</p>
+    </div>
+  </section>
+
+  <!-- Venue -->
+  <section class="venue" id="venue">
+    <h2 class="script" data-i18n="venue.title">Our Day</h2>
+    <span class="gold-rule"></span>
+    <svg class="venue-art" viewBox="0 0 240 140" aria-hidden="true">
+      <path class="trail" d="M70 76c0 34 50 44 82 20M180 128C160 112 152 102 152 92c0-10 8-16 16-16 6 0 10 4 12 8 2-4 6-8 12-8 8 0 16 6 16 16 0 10-8 20-28 36z"/>
+      <path class="pin" d="M70 74C58 60 52 50 52 40a18 18 0 0 1 36 0c0 10-6 20-18 34z"/>
+      <path class="pin-heart" d="M70 47c-5-4-8-6-8-9 0-2 2-4 4-4 2 0 3 1 4 2 1-1 2-2 4-2 2 0 4 2 4 4 0 3-3 5-8 9z"/>
+    </svg>
+    <h3 class="script venue-name" data-cfg="venueName"></h3>
+    <a class="venue-address" id="address-link" target="_blank" rel="noopener">
+      <span data-cfg="address1"></span><br><span data-cfg="address2"></span>
+    </a>
+    <span class="gold-rule"></span>
+    <p class="venue-tap" data-i18n="venue.directions">Tap the photo for directions</p>
+    <a class="venue-frame" id="photo-link" target="_blank" rel="noopener" aria-label="Open Beau Jardin East in Maps">
+      <img src="assets/img/venue-photo.webp" alt="Beau Jardin East" loading="lazy">
+      <span class="venue-pin">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 22s7-6.6 7-12a7 7 0 0 0-14 0c0 5.4 7 12 7 12zm0-9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" fill="currentColor"/></svg>
+        <span data-i18n="venue.openMaps">Open location</span>
+      </span>
+    </a>
+  </section>
 
   <!-- Countdown -->
   <section class="countdown paper">
@@ -79,68 +135,6 @@
     <p class="basmala" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
     <p class="verse-text" lang="ar" dir="rtl"><span class="orn">﴿</span>وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ<span class="orn">﴾</span></p>
     <p class="verse-ref" lang="ar" dir="rtl">سورة الروم – الآية ٢١</p>
-  </section>
-
-  <!-- Welcome -->
-  <section class="welcome">
-    <h2 class="script" data-i18n="welcome.title">Welcome!</h2>
-    <p class="welcome-text">
-      With hearts full of joy and gratitude,<br>
-      we cordially invite you to join us<br>
-      as we celebrate the beginning of our forever.
-    </p>
-    <p class="welcome-text">
-      Your presence would make this special day<br>
-      even more meaningful to us.
-    </p>
-    <div class="fleuron" aria-hidden="true"><span></span><i>❦</i><span></span></div>
-    <p class="welcome-love">With love,</p>
-    <p class="script welcome-sign"><span data-cfg="name2"></span> &amp; <span data-cfg="name1"></span></p>
-  </section>
-
-  <!-- Venue -->
-  <section class="venue" id="venue">
-    <h2 class="script light" data-i18n="venue.title">The Venue</h2>
-    <p class="venue-sub" data-i18n="venue.subtitle">Where we celebrate</p>
-    <div class="card venue-card">
-      <img src="assets/img/venue-sketch.webp" alt="" class="venue-sketch" loading="lazy">
-      <h3 class="script venue-name" data-cfg="venueName"></h3>
-      <hr>
-      <p class="venue-when"><span data-cfg="dateLong"></span> <span class="dot">·</span> <em data-cfg="time"></em></p>
-      <hr class="short">
-      <p class="venue-address" data-cfg="address1"></p>
-      <p class="venue-address2" data-cfg="address2"></p>
-      <div class="map">
-        <iframe id="map-frame" title="Map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <a id="map-link" class="map-btn" target="_blank" rel="noopener">
-          <span data-i18n="venue.openMaps">Open in Maps</span>
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Programme -->
-  <section class="programme paper">
-    <h2 class="script" data-i18n="programme.title">Day Programme</h2>
-    <p class="programme-date" data-cfg="dateLong"></p>
-    <ol class="timeline" id="timeline"></ol>
-  </section>
-
-  <!-- Dress code -->
-  <section class="dress">
-    <img src="assets/img/champagne.png" alt="" class="ornament" loading="lazy">
-    <div class="dress-bg">
-      <div class="card glass">
-        <h2 class="script" data-i18n="dress.title">Dress Code</h2>
-        <h3 class="script small" data-i18n="dress.women">Women</h3>
-        <p data-i18n="dress.womenText"></p>
-        <hr class="short">
-        <h3 class="script small" data-i18n="dress.men">Men</h3>
-        <p data-i18n="dress.menText"></p>
-      </div>
-    </div>
-    <img src="assets/img/bow.png" alt="" class="ornament" loading="lazy">
   </section>
 
   <!-- RSVP -->

@@ -12,15 +12,6 @@ const CONFIG = {
   address2: "Cairo, Egypt",
   mapQuery: "5JPJ+G43 Beau Jardin East, Ismailia Desert Rd, El Shorouk, Cairo Governorate",
   mapLink: "https://maps.app.goo.gl/r3tn38XmANG3feQ18",
-  programme: [
-    { time: "16:00", key: "arrival" },
-    { time: "17:00", key: "ceremony" },
-    { time: "17:30", key: "firstDance" },
-    { time: "18:30", key: "cocktails" },
-    { time: "19:00", key: "dinner" },
-    { time: "21:30", key: "cake" },
-    { time: "22:00", key: "finish" },
-  ],
   maxGuests: 6,
   // RSVP delivery. The first one that is set is used:
   //  0. Supabase     – fill in supabase-config.js (see supabase/setup.sql)
@@ -41,23 +32,9 @@ const I18N = {
     "countdown.days": "Days",
     "countdown.hours": "Hours",
     "countdown.minutes": "Minutes",
-    "welcome.title": "Welcome!",
-    "venue.title": "The Venue",
-    "venue.subtitle": "Where we celebrate",
-    "venue.openMaps": "Open in Maps",
-    "programme.title": "Day Programme",
-    "programme.arrival": "Arrival",
-    "programme.ceremony": "Katb El Ketab",
-    "programme.firstDance": "First Dance",
-    "programme.cocktails": "Cocktail Hour",
-    "programme.dinner": "Dinner",
-    "programme.cake": "Cutting the cake",
-    "programme.finish": "Finish",
-    "dress.title": "Dress Code",
-    "dress.women": "Women",
-    "dress.womenText": "Wear whatever makes you feel beautiful",
-    "dress.men": "Men",
-    "dress.menText": "Dark suit with Tie / Papion",
+    "venue.title": "Our Day",
+    "venue.directions": "Tap the photo for directions",
+    "venue.openMaps": "Open location",
     "rsvp.subtitle": "Kindly let us know if you can join us",
     "rsvp.attending": "Will you be attending?",
     "rsvp.yes": "Yes, I'll be there",
@@ -109,27 +86,27 @@ function to12h(hhmm) {
 }
 
 function renderConfig() {
-  const values = { ...CONFIG, time: to12h(CONFIG.time), dateLong: formatDate() };
+  const values = {
+    ...CONFIG,
+    time: to12h(CONFIG.time),
+    timeShort: to12h(CONFIG.time).replace(":00", ""),
+    dateLong: formatDate(),
+    dateShort: new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Cairo" }).format(weddingDate),
+  };
   $$("[data-cfg]").forEach((el) => (el.textContent = values[el.dataset.cfg]));
-}
-
-function renderTimeline() {
-  $("#timeline").innerHTML = CONFIG.programme
-    .map((p) => `<li><div class="time">${to12h(p.time)}</div><div class="what">${t("programme." + p.key)}</div></li>`)
-    .join("");
 }
 
 function setupMap() {
   const q = encodeURIComponent(CONFIG.mapQuery);
-  $("#map-frame").src = `https://www.google.com/maps?q=${q}&output=embed`;
-  $("#map-link").href = CONFIG.mapLink || `https://www.google.com/maps/search/?api=1&query=${q}`;
+  const link = CONFIG.mapLink || `https://www.google.com/maps/search/?api=1&query=${q}`;
+  $("#address-link").href = link;
+  $("#photo-link").href = link;
 }
 
 function renderText() {
   $$("[data-i18n]").forEach((el) => (el.textContent = t(el.dataset.i18n)));
   $$("[data-i18n-ph]").forEach((el) => (el.placeholder = t(el.dataset.i18nPh)));
   renderConfig();
-  renderTimeline();
   renderGuests();
 }
 
@@ -289,7 +266,7 @@ function setupRsvp() {
 
 /* ---------- Scroll reveal ---------- */
 function setupReveal() {
-  const targets = $$("section > *:not(.dress-bg), .dress-bg .card");
+  const targets = $$("section > *");
   if (!("IntersectionObserver" in window)) return;
   const io = new IntersectionObserver((entries) => {
     entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
@@ -320,7 +297,11 @@ function setupIntro() {
   const toggle = $("#music-toggle");
   let state = "idle";
 
-  const setPlaying = (on) => toggle.classList.toggle("playing", on);
+  const setPlaying = (on) => {
+    toggle.classList.toggle("playing", on);
+    toggle.setAttribute("aria-pressed", on);
+    toggle.setAttribute("aria-label", on ? "Pause our song" : "Play our song");
+  };
   music.volume = 0.6;
   music.addEventListener("play", () => setPlaying(true));
   music.addEventListener("pause", () => setPlaying(false));
@@ -332,14 +313,12 @@ function setupIntro() {
     intro.classList.add("fade");
     document.body.classList.remove("locked");
     setTimeout(() => intro.remove(), 800);
-    toggle.hidden = false;
     autoScrollIfIdle();
   };
 
   intro.addEventListener("click", () => {
     if (state !== "idle") return;
     state = "playing";
-    music.play().catch(() => {});
     const p = video.play();
     if (p && p.catch) p.catch(finish);
   });
