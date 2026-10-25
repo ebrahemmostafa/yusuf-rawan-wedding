@@ -87,6 +87,42 @@ body.locked { overflow: hidden; height: 100svh; }
 }
 @keyframes pulse { 50% { opacity: .35; } }
 
+/* ---------- Language switch ---------- */
+.lang-toggle {
+  position: fixed;
+  top: 14px;
+  inset-inline-end: 14px;
+  z-index: 50;
+  min-width: 56px;
+  padding: 7px 14px;
+  border: 1px solid rgba(197, 164, 109, .6);
+  border-radius: 999px;
+  background: rgba(255, 253, 249, .9);
+  color: var(--brown-dark);
+  font-family: "Amiri", var(--body);
+  font-size: 1rem;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(60, 40, 10, .15);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Arabic ---------- */
+html[lang="ar"] body { font-family: "Amiri", var(--body); }
+html[lang="ar"] * { letter-spacing: 0 !important; }
+html[lang="ar"] .script:not(.venue-name),
+html[lang="ar"] .hero-names,
+html[lang="ar"] .invite-names { font-family: "Aref Ruqaa", "Amiri", serif; }
+html[lang="ar"] .hero-names { font-size: clamp(3.2rem, 13vw, 5rem); line-height: 1.2; }
+html[lang="ar"] .invite-names { font-size: clamp(2.4rem, 10vw, 3rem); }
+html[lang="ar"] .script:not(.venue-name) { font-size: clamp(2.2rem, 8vw, 2.9rem); }
+html[lang="ar"] .song-title { font-size: clamp(1.6rem, 6vw, 2rem); }
+html[lang="ar"] .hero-kicker { font-size: 1.35rem; }
+html[lang="ar"] .invite-day { font-size: 1.3rem; }
+html[lang="ar"] .invite-time { font-size: 1.35rem; }
+html[lang="ar"] .timer span { font-style: normal; }
+html[lang="ar"] .venue-name { direction: ltr; }
+
 /* ---------- Our song ---------- */
 .song { width: min(320px, 82vw); margin-bottom: 22px; }
 .song-player { display: flex; align-items: center; }
@@ -204,9 +240,9 @@ body.locked { overflow: hidden; height: 100svh; }
   flex-direction: column;
   align-items: center;
   padding: 0 26px;
-  border-left: 1px solid var(--line);
+  border-inline-start: 1px solid var(--line);
 }
-.timer div:first-child { border-left: 0; }
+.timer div:first-child { border-inline-start: 0; }
 .timer span { font-family: var(--body); font-style: italic; font-size: 2.2rem; color: var(--gold); }
 .timer small {
   margin-top: 18px;
@@ -282,6 +318,13 @@ body.locked { overflow: hidden; height: 100svh; }
 }
 .invite-names .amp { font-size: .45em; color: var(--brown); }
 .flourish { display: block; width: 170px; margin: 18px auto; color: var(--gold); }
+.invite-day {
+  text-transform: uppercase;
+  letter-spacing: .3em;
+  font-size: 1rem;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
 .invite-date {
   display: flex;
   align-items: center;
@@ -384,7 +427,7 @@ body.locked { overflow: hidden; height: 100svh; }
 .venue-pin svg { color: var(--gold); }
 
 /* ---------- RSVP ---------- */
-.rsvp-card { text-align: left; }
+.rsvp-card { text-align: start; }
 fieldset { border: 0; padding: 0; margin: 0 0 30px; }
 legend, .label-row { font-size: 1.3rem; color: var(--brown); margin-bottom: 14px; padding: 0; }
 .req { color: var(--gold); }

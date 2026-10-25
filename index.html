@@ -23,7 +23,7 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Great+Vibes&family=Pinyon+Script&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Great+Vibes&family=Pinyon+Script&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="locked">
@@ -32,11 +32,14 @@
   <div class="intro" id="intro" role="button" aria-label="Open invitation">
     <img src="assets/img/intro-poster.jpg" alt="" class="intro-poster" draggable="false">
     <video id="intro-video" src="assets/video/intro.mp4" poster="assets/img/intro-poster.jpg" muted playsinline preload="auto"></video>
-    <p class="intro-hint">Tap to open</p>
+    <p class="intro-hint" data-i18n="intro.hint">Tap to open</p>
   </div>
 
   <!-- Background music -->
   <audio id="music" src="assets/audio/music.mp3" loop preload="auto"></audio>
+
+  <!-- Language switch -->
+  <button type="button" class="lang-toggle" id="lang-toggle" lang="ar">عربي</button>
 
   <!-- Hero -->
   <header class="hero" id="top">
@@ -63,7 +66,7 @@
             <span class="song-line"></span>
             <svg class="heart" viewBox="0 0 24 22" aria-hidden="true"><path d="M12 21.5S1 14.6 1 7.4C1 3.8 3.7 1 7 1c2.1 0 3.9 1.1 5 2.8C13.1 2.1 14.9 1 17 1c3.3 0 6 2.8 6 6.4 0 7.2-11 14.1-11 14.1z"/></svg>
           </div>
-          <p class="script song-title">Listen to our song</p>
+          <p class="script song-title" data-i18n="song.title">Listen to our song</p>
         </div>
         <a href="#rsvp" class="hero-rsvp">
           <span data-i18n="hero.rsvp">RSVP</span>
@@ -86,12 +89,13 @@
         <span data-cfg="name2"></span>
       </h2>
       <svg class="flourish" viewBox="0 0 220 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path id="fl-half" d="M98 14c-8 0-12-7-20-7s-10 8-3 9 6-6 1-6M98 14H58c-6 0-9-4-15-4-7 0-11 5-18 5-5 0-8-3-8-6s3-4 5-3M60 14c-4 3-9 6-15 6-5 0-8-2-8-5M30 15c-6 0-10 3-16 3"/><use href="#fl-half" transform="matrix(-1 0 0 1 220 0)"/><path d="M110 7l4 7-4 7-4-7z"/><circle cx="110" cy="14" r="1.4" fill="currentColor"/></g></svg>
+      <p class="invite-day" data-cfg="weekday"></p>
       <p class="invite-date"><span data-cfg="dateShort"></span></p>
-      <p class="invite-time">At <span data-cfg="timeShort"></span></p>
+      <p class="invite-time" data-cfg="timeLine"></p>
       <p class="invite-venue" data-cfg="venueName"></p>
       <p class="invite-address"><span data-cfg="address1"></span><br><span data-cfg="address2"></span></p>
       <svg class="flourish" viewBox="0 0 220 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M98 14c-8 0-12-7-20-7s-10 8-3 9 6-6 1-6M98 14H58c-6 0-9-4-15-4-7 0-11 5-18 5-5 0-8-3-8-6s3-4 5-3M60 14c-4 3-9 6-15 6-5 0-8-2-8-5M30 15c-6 0-10 3-16 3"/><use href="#fl-half" transform="matrix(-1 0 0 1 220 0)"/><path d="M110 7l4 7-4 7-4-7z"/><circle cx="110" cy="14" r="1.4" fill="currentColor"/></g></svg>
-      <p class="invite-note">We can't wait to celebrate our special day with you!</p>
+      <p class="invite-note" data-i18n="invite.note">We can't wait to celebrate our special day with you!</p>
     </div>
   </section>
 
@@ -139,7 +143,7 @@
 
   <!-- RSVP -->
   <section class="rsvp" id="rsvp">
-    <h2 class="script light">RSVP</h2>
+    <h2 class="script light" data-i18n="rsvp.title">RSVP</h2>
     <p class="venue-sub" data-i18n="rsvp.subtitle"></p>
     <form class="card rsvp-card" id="rsvp-form" novalidate>
       <fieldset>
@@ -189,7 +193,7 @@
   <footer class="footer">
     <p class="script"><span data-cfg="name1"></span> &amp; <span data-cfg="name2"></span></p>
     <p class="caps" data-cfg="dateLong"></p>
-    <p class="credit">made with love by <a href="https://ajwa2-collection.vercel.app/" target="_blank" rel="noopener">Ajwaa</a></p>
+    <p class="credit"><span data-i18n="footer.credit">made with love by</span> <a href="https://ajwa2-collection.vercel.app/" target="_blank" rel="noopener">Ajwaa</a></p>
   </footer>
 
   <script src="supabase-config.js"></script>

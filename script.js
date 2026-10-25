@@ -21,12 +21,26 @@ const CONFIG = {
   rsvpEndpoint: "",
   rsvpWhatsApp: "",
   rsvpEmail: "",
+  // Arabic version of the details above
+  ar: {
+    name1: "يوسف",
+    name2: "روان",
+    address1: "طريق مصر الإسماعيلية الصحراوي، الشروق",
+    address2: "القاهرة، مصر",
+    timeLine: "الساعة الرابعة مساءً",
+  },
 };
 
 const I18N = {
   en: {
+    "intro.hint": "Tap to open",
     "hero.kicker": "We're getting married",
     "hero.rsvp": "RSVP",
+    "song.title": "Listen to our song",
+    "song.play": "Play our song",
+    "song.pause": "Pause our song",
+    "invite.at": "At {time}",
+    "invite.note": "We can't wait to celebrate our special day with you!",
     "countdown.title": "Countdown",
     "countdown.until": "Until",
     "countdown.days": "Days",
@@ -35,6 +49,7 @@ const I18N = {
     "venue.title": "Our Day",
     "venue.directions": "Tap the photo for directions",
     "venue.openMaps": "Open location",
+    "rsvp.title": "RSVP",
     "rsvp.subtitle": "Kindly let us know if you can join us",
     "rsvp.attending": "Will you be attending?",
     "rsvp.yes": "Yes, I'll be there",
@@ -63,21 +78,70 @@ const I18N = {
     "msg.guests": "Guests",
     "msg.children": "Children",
     "msg.message": "Message",
+    "footer.credit": "made with love by",
+  },
+  ar: {
+    "intro.hint": "اضغط لفتح الدعوة",
+    "hero.kicker": "دعوة زفاف",
+    "hero.rsvp": "تأكيد الحضور",
+    "song.title": "استمعوا إلى أغنيتنا",
+    "song.play": "تشغيل أغنيتنا",
+    "song.pause": "إيقاف أغنيتنا",
+    "invite.note": "بكل الحب ننتظركم لنحتفل معًا بيومنا المميز!",
+    "countdown.title": "العد التنازلي",
+    "countdown.until": "حتى",
+    "countdown.days": "أيام",
+    "countdown.hours": "ساعات",
+    "countdown.minutes": "دقائق",
+    "venue.title": "يومنا",
+    "venue.directions": "اضغط على الصورة لمعرفة الطريق",
+    "venue.openMaps": "افتح الموقع",
+    "rsvp.title": "تأكيد الحضور",
+    "rsvp.subtitle": "يسعدنا أن تخبرونا إن كنتم ستشاركوننا فرحتنا",
+    "rsvp.attending": "هل ستشرفنا بالحضور؟",
+    "rsvp.yes": "نعم، سأحضر",
+    "rsvp.no": "للأسف، لن أتمكن من الحضور",
+    "rsvp.howMany": "كم عدد الضيوف؟",
+    "rsvp.person": "الضيف {n}",
+    "rsvp.mainContact": "(صاحب الدعوة)",
+    "rsvp.fullName": "الاسم بالكامل",
+    "rsvp.dietary": "احتياجات غذائية خاصة",
+    "rsvp.dietaryPh": "مثال: نباتي، حساسية من طعام معين",
+    "rsvp.children": "هل سيحضر أطفال؟",
+    "rsvp.childYes": "نعم",
+    "rsvp.childNo": "لا",
+    "rsvp.childrenPh": "عدد الأطفال وأعمارهم",
+    "rsvp.message": "رسالة للعروسين",
+    "rsvp.messagePh": "اكتب كلمة جميلة (اختياري)",
+    "rsvp.submit": "إرسال",
+    "rsvp.sending": "جارٍ الإرسال…",
+    "rsvp.errName": "من فضلك اكتب اسم كل ضيف.",
+    "rsvp.errSend": "حدث خطأ ما، حاول مرة أخرى.",
+    "rsvp.thanksTitle": "شكرًا لك!",
+    "rsvp.thanksYes": "في انتظاركم لنحتفل معًا.",
+    "rsvp.thanksNo": "سنفتقدك، شكرًا لإبلاغنا.",
+    "msg.title": "تأكيد الحضور – {couple}",
+    "msg.attending": "الحضور",
+    "msg.guests": "الضيوف",
+    "msg.children": "الأطفال",
+    "msg.message": "الرسالة",
+    "footer.credit": "صُنع بحب بواسطة",
   },
 };
 
+const LANGS = { en: { locale: "en-GB", dir: "ltr" }, ar: { locale: "ar-EG", dir: "rtl" } };
+let lang = "en";
+
 const t = (key, vars = {}) =>
-  (I18N.en[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
+  (I18N[lang][key] ?? I18N.en[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const weddingDate = new Date(CONFIG.date);
 
 /* ---------- Static content ---------- */
-function formatDate() {
-  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" })
-    .format(weddingDate);
-}
+const formatDate = (opts) =>
+  new Intl.DateTimeFormat(LANGS[lang].locale, { timeZone: "Africa/Cairo", ...opts }).format(weddingDate);
 
 // "16:00" -> "4:00 PM"
 function to12h(hhmm) {
@@ -86,12 +150,14 @@ function to12h(hhmm) {
 }
 
 function renderConfig() {
+  const weekday = formatDate({ weekday: "long" });
   const values = {
     ...CONFIG,
-    time: to12h(CONFIG.time),
-    timeShort: to12h(CONFIG.time).replace(":00", ""),
-    dateLong: formatDate(),
-    dateShort: new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Cairo" }).format(weddingDate),
+    timeLine: t("invite.at", { time: to12h(CONFIG.time).replace(":00", "") }),
+    dateLong: formatDate({ day: "numeric", month: "long", year: "numeric" }),
+    dateShort: formatDate({ day: "2-digit", month: "2-digit", year: "numeric" }),
+    weekday: lang === "ar" ? `يوم ${weekday}` : weekday,
+    ...(lang === "ar" ? CONFIG.ar : {}),
   };
   $$("[data-cfg]").forEach((el) => (el.textContent = values[el.dataset.cfg]));
 }
@@ -108,6 +174,25 @@ function renderText() {
   $$("[data-i18n-ph]").forEach((el) => (el.placeholder = t(el.dataset.i18nPh)));
   renderConfig();
   renderGuests();
+  const music = $("#music-toggle");
+  music.setAttribute("aria-label", t(music.classList.contains("playing") ? "song.pause" : "song.play"));
+}
+
+/* ---------- Language ---------- */
+function setLang(next) {
+  lang = LANGS[next] ? next : "en";
+  document.documentElement.lang = lang;
+  document.documentElement.dir = LANGS[lang].dir;
+  $("#lang-toggle").textContent = lang === "ar" ? "EN" : "عربي";
+  try { localStorage.setItem("lang", lang); } catch {}
+  renderText();
+}
+
+function setupLang() {
+  let saved = new URLSearchParams(location.search).get("lang");
+  if (!saved) try { saved = localStorage.getItem("lang"); } catch {}
+  $("#lang-toggle").addEventListener("click", () => setLang(lang === "ar" ? "en" : "ar"));
+  setLang(saved || "en");
 }
 
 /* ---------- Countdown ---------- */
@@ -284,7 +369,7 @@ function autoScrollIfIdle(delay = 4000) {
   };
   const timer = setTimeout(() => {
     cancel();
-    if (window.scrollY < 10) $(".countdown").scrollIntoView({ behavior: "smooth" });
+    if (window.scrollY < 10) $(".invite").scrollIntoView({ behavior: "smooth" });
   }, delay);
   setTimeout(() => events.forEach((e) => window.addEventListener(e, cancel, { passive: true })), 0);
 }
@@ -300,7 +385,7 @@ function setupIntro() {
   const setPlaying = (on) => {
     toggle.classList.toggle("playing", on);
     toggle.setAttribute("aria-pressed", on);
-    toggle.setAttribute("aria-label", on ? "Pause our song" : "Play our song");
+    toggle.setAttribute("aria-label", t(on ? "song.pause" : "song.play"));
   };
   music.volume = 0.6;
   music.addEventListener("play", () => setPlaying(true));
@@ -337,7 +422,7 @@ window.scrollTo(0, 0);
 
 setupMap();
 setupRsvp();
-renderText();
+setupLang();
 tick();
 setInterval(tick, 30000);
 setupReveal();
